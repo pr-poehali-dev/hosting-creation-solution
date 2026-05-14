@@ -161,10 +161,17 @@ export default function Index() {
           ))}
         </div>
 
-        <button onClick={() => buyPlan("START")}
-          className="hidden md:block neon-btn px-5 py-2 rounded text-sm font-semibold">
-          Начать
-        </button>
+        <div className="hidden md:flex items-center gap-3">
+          <button onClick={() => window.open("http://2.26.80.222", "_blank")}
+            className="neon-btn-purple px-5 py-2 rounded text-sm font-semibold flex items-center gap-2">
+            <Icon name="LayoutDashboard" size={14} />
+            Панель
+          </button>
+          <button onClick={() => buyPlan("START")}
+            className="neon-btn px-5 py-2 rounded text-sm font-semibold">
+            Начать
+          </button>
+        </div>
 
         {/* Mobile burger */}
         <button className="md:hidden text-cyan-400" onClick={() => setNavOpen(!navOpen)}>
