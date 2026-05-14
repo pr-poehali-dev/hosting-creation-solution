@@ -1,87 +1,15 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Icon from "@/components/ui/icon";
 
 const TELEGRAM_USERNAME = "HellwayYT";
 
 const plans = [
-  {
-    id: "start",
-    name: "START",
-    location: "🇩🇪 Германия",
-    price: "149",
-    currency: "₽/мес",
-    cpu: "2 vCPU",
-    ram: "4 GB",
-    disk: "50 GB NVMe",
-    bandwidth: "1 Гбит/с",
-    popular: false,
-    color: "cyan",
-  },
-  {
-    id: "pro",
-    name: "PRO",
-    location: "🇩🇪 Германия",
-    price: "349",
-    currency: "₽/мес",
-    cpu: "4 vCPU",
-    ram: "8 GB",
-    disk: "100 GB NVMe",
-    bandwidth: "1 Гбит/с",
-    popular: true,
-    color: "cyan",
-  },
-  {
-    id: "ultra",
-    name: "ULTRA",
-    location: "🇩🇪 Германия",
-    price: "699",
-    currency: "₽/мес",
-    cpu: "8 vCPU",
-    ram: "16 GB",
-    disk: "200 GB NVMe",
-    bandwidth: "10 Гбит/с",
-    popular: false,
-    color: "purple",
-  },
-  {
-    id: "start-fi",
-    name: "START FI",
-    location: "🇫🇮 Финляндия",
-    price: "129",
-    currency: "₽/мес",
-    cpu: "2 vCPU",
-    ram: "4 GB",
-    disk: "50 GB NVMe",
-    bandwidth: "1 Гбит/с",
-    popular: false,
-    color: "cyan",
-  },
-  {
-    id: "pro-fi",
-    name: "PRO FI",
-    location: "🇫🇮 Финляндия",
-    price: "299",
-    currency: "₽/мес",
-    cpu: "4 vCPU",
-    ram: "8 GB",
-    disk: "100 GB NVMe",
-    bandwidth: "1 Гбит/с",
-    popular: false,
-    color: "cyan",
-  },
-  {
-    id: "ultra-fi",
-    name: "ULTRA FI",
-    location: "🇫🇮 Финляндия",
-    price: "599",
-    currency: "₽/мес",
-    cpu: "8 vCPU",
-    ram: "16 GB",
-    disk: "200 GB NVMe",
-    bandwidth: "10 Гбит/с",
-    popular: false,
-    color: "purple",
-  },
+  { id: "start", name: "START", location: "🇩🇪 Германия", price: "149", currency: "₽/мес", cpu: "2 vCPU", ram: "4 GB", disk: "50 GB NVMe", bandwidth: "1 Гбит/с", popular: false, color: "cyan" },
+  { id: "pro", name: "PRO", location: "🇩🇪 Германия", price: "349", currency: "₽/мес", cpu: "4 vCPU", ram: "8 GB", disk: "100 GB NVMe", bandwidth: "1 Гбит/с", popular: true, color: "cyan" },
+  { id: "ultra", name: "ULTRA", location: "🇩🇪 Германия", price: "699", currency: "₽/мес", cpu: "8 vCPU", ram: "16 GB", disk: "200 GB NVMe", bandwidth: "10 Гбит/с", popular: false, color: "purple" },
+  { id: "start-fi", name: "START FI", location: "🇫🇮 Финляндия", price: "129", currency: "₽/мес", cpu: "2 vCPU", ram: "4 GB", disk: "50 GB NVMe", bandwidth: "1 Гбит/с", popular: false, color: "cyan" },
+  { id: "pro-fi", name: "PRO FI", location: "🇫🇮 Финляндия", price: "299", currency: "₽/мес", cpu: "4 vCPU", ram: "8 GB", disk: "100 GB NVMe", bandwidth: "1 Гбит/с", popular: false, color: "cyan" },
+  { id: "ultra-fi", name: "ULTRA FI", location: "🇫🇮 Финляндия", price: "599", currency: "₽/мес", cpu: "8 vCPU", ram: "16 GB", disk: "200 GB NVMe", bandwidth: "10 Гбит/с", popular: false, color: "purple" },
 ];
 
 const features = [
@@ -94,26 +22,11 @@ const features = [
 ];
 
 const faqs = [
-  {
-    q: "Как быстро активируется сервер?",
-    a: "Сервер разворачивается автоматически в течение 60 секунд после подтверждения оплаты.",
-  },
-  {
-    q: "Какие ОС доступны?",
-    a: "Ubuntu 20.04/22.04, Debian 11/12, CentOS 8, Windows Server 2019/2022.",
-  },
-  {
-    q: "Есть ли пробный период?",
-    a: "Да, мы предоставляем тестовый период 24 часа на тарифе START. Напишите нам в Telegram.",
-  },
-  {
-    q: "Как оплатить?",
-    a: "Принимаем QIWI, карты РФ, криптовалюту (USDT, BTC, ETH). Оплата через Telegram-менеджера.",
-  },
-  {
-    q: "Можно ли сменить тариф?",
-    a: "Да, апгрейд возможен в любое время без потери данных. Разница в стоимости пересчитывается автоматически.",
-  },
+  { q: "Как быстро активируется сервер?", a: "Сервер разворачивается автоматически в течение 60 секунд после подтверждения оплаты." },
+  { q: "Какие ОС доступны?", a: "Ubuntu 20.04/22.04, Debian 11/12, CentOS 8, Windows Server 2019/2022." },
+  { q: "Есть ли пробный период?", a: "Да, мы предоставляем тестовый период 24 часа на тарифе START. Напишите нам в Telegram." },
+  { q: "Как оплатить?", a: "Принимаем QIWI, карты РФ, криптовалюту (USDT, BTC, ETH). Оплата через Telegram-менеджера." },
+  { q: "Можно ли сменить тариф?", a: "Да, апгрейд возможен в любое время без потери данных. Разница в стоимости пересчитывается автоматически." },
 ];
 
 function buyPlan(planName: string) {
@@ -121,24 +34,251 @@ function buyPlan(planName: string) {
   window.open(`https://t.me/${TELEGRAM_USERNAME}?text=${msg}`, "_blank");
 }
 
+// Хук: появление при скролле
+function useInView(threshold = 0.15) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [inView, setInView] = useState(false);
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setInView(true); obs.disconnect(); } }, { threshold });
+    if (ref.current) obs.observe(ref.current);
+    return () => obs.disconnect();
+  }, [threshold]);
+  return { ref, inView };
+}
+
+// Хук: счётчик цифр
+function useCounter(target: number, inView: boolean, duration = 1800) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (!inView) return;
+    let start = 0;
+    const step = target / (duration / 16);
+    const timer = setInterval(() => {
+      start += step;
+      if (start >= target) { setCount(target); clearInterval(timer); }
+      else setCount(Math.floor(start));
+    }, 16);
+    return () => clearInterval(timer);
+  }, [inView, target, duration]);
+  return count;
+}
+
+// Частицы на холсте
+function ParticleCanvas() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+    let animId: number;
+    const resize = () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; };
+    resize();
+    window.addEventListener("resize", resize);
+
+    const particles: { x: number; y: number; vx: number; vy: number; size: number; opacity: number; hue: number }[] = [];
+    for (let i = 0; i < 80; i++) {
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        size: Math.random() * 1.5 + 0.3,
+        opacity: Math.random() * 0.5 + 0.1,
+        hue: Math.random() > 0.6 ? 280 : 180,
+      });
+    }
+
+    const draw = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach((p) => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0) p.x = canvas.width;
+        if (p.x > canvas.width) p.x = 0;
+        if (p.y < 0) p.y = canvas.height;
+        if (p.y > canvas.height) p.y = 0;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${p.hue}, 100%, 60%, ${p.opacity})`;
+        ctx.fill();
+      });
+      // Линии между близкими частицами
+      for (let i = 0; i < particles.length; i++) {
+        for (let j = i + 1; j < particles.length; j++) {
+          const dx = particles[i].x - particles[j].x;
+          const dy = particles[i].y - particles[j].y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(particles[i].x, particles[i].y);
+            ctx.lineTo(particles[j].x, particles[j].y);
+            ctx.strokeStyle = `rgba(0,255,255,${0.06 * (1 - dist / 120)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        }
+      }
+      animId = requestAnimationFrame(draw);
+    };
+    draw();
+    return () => { cancelAnimationFrame(animId); window.removeEventListener("resize", resize); };
+  }, []);
+  return <canvas ref={canvasRef} className="fixed inset-0 pointer-events-none z-0" />;
+}
+
+// Компонент карточки тарифа с анимацией наведения
+function PlanCard({ plan, index }: { plan: typeof plans[0]; index: number }) {
+  const [hovered, setHovered] = useState(false);
+  const { ref, inView } = useInView(0.1);
+  return (
+    <div
+      ref={ref}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      className="relative rounded-xl p-6 cursor-default"
+      style={{
+        background: plan.popular
+          ? "linear-gradient(135deg, rgba(0,255,255,0.1), rgba(0,128,255,0.07))"
+          : "linear-gradient(135deg, rgba(7,14,22,0.9), rgba(5,10,15,0.95))",
+        border: hovered
+          ? plan.color === "purple" ? "1px solid rgba(191,95,255,0.6)" : "1px solid rgba(0,255,255,0.6)"
+          : plan.popular ? "1px solid rgba(0,255,255,0.5)" : "1px solid rgba(0,255,255,0.15)",
+        boxShadow: hovered
+          ? plan.color === "purple"
+            ? "0 8px 60px rgba(0,0,0,0.8), 0 0 50px rgba(191,95,255,0.25), inset 0 0 30px rgba(191,95,255,0.05)"
+            : "0 8px 60px rgba(0,0,0,0.8), 0 0 50px rgba(0,255,255,0.25), inset 0 0 30px rgba(0,255,255,0.05)"
+          : plan.popular
+            ? "0 8px 50px rgba(0,0,0,0.7), 0 0 50px rgba(0,255,255,0.18)"
+            : "0 4px 30px rgba(0,0,0,0.5), 0 0 20px rgba(0,255,255,0.04)",
+        transform: hovered ? "translateY(-8px) scale(1.02)" : inView ? "translateY(0) scale(1)" : "translateY(40px) scale(0.97)",
+        opacity: inView ? 1 : 0,
+        transition: `transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.6s ease ${index * 0.08}s, box-shadow 0.3s ease, border-color 0.3s ease`,
+      }}
+    >
+      {plan.popular && (
+        <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-semibold font-orbitron tracking-wider"
+          style={{ background: "var(--neon-cyan)", color: "#050a0f" }}>
+          ПОПУЛЯРНЫЙ
+        </div>
+      )}
+      <div className="flex items-start justify-between mb-4">
+        <div>
+          <span className="font-orbitron text-xs tracking-widest text-gray-500 uppercase">{plan.location}</span>
+          <h3 className="font-orbitron text-xl font-bold mt-1"
+            style={{ color: plan.color === "purple" ? "var(--neon-purple)" : "var(--neon-cyan)" }}>
+            {plan.name}
+          </h3>
+        </div>
+        <div className="text-right">
+          <span className="font-orbitron text-3xl font-black text-white">{plan.price}</span>
+          <span className="font-ibm text-xs text-gray-500 block">{plan.currency}</span>
+        </div>
+      </div>
+      <div className="space-y-3 mb-6">
+        {[{ icon: "Cpu", val: plan.cpu }, { icon: "MemoryStick", val: plan.ram + " RAM" }, { icon: "HardDrive", val: plan.disk }, { icon: "Wifi", val: plan.bandwidth }].map(({ icon, val }) => (
+          <div key={val} className="flex items-center gap-3">
+            <Icon name={icon} size={14} className="text-cyan-400 opacity-70" fallback="Server" />
+            <span className="font-ibm text-sm text-gray-300">{val}</span>
+          </div>
+        ))}
+      </div>
+      <button
+        onClick={() => buyPlan(plan.name)}
+        className={`w-full py-3 rounded text-sm font-semibold transition-all duration-300 ${plan.color === "purple" ? "neon-btn-purple" : "neon-btn"}`}>
+        КУПИТЬ ТАРИФ
+      </button>
+    </div>
+  );
+}
+
+// Счётчик с анимацией
+function AnimatedStat({ value, label, suffix = "" }: { value: number | string; label: string; suffix?: string }) {
+  const { ref, inView } = useInView(0.3);
+  const numVal = typeof value === "number" ? value : 0;
+  const count = useCounter(numVal, inView);
+  return (
+    <div ref={ref} className="text-center" style={{ opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(20px)", transition: "opacity 0.6s ease, transform 0.6s ease" }}>
+      <div className="font-orbitron text-2xl font-bold" style={{ color: "var(--neon-cyan)" }}>
+        {typeof value === "number" ? count + suffix : value}
+      </div>
+      <div className="font-ibm text-xs text-gray-500 uppercase tracking-wider mt-1">{label}</div>
+    </div>
+  );
+}
+
+// Компонент секции с reveal
+function RevealSection({ children, className = "", delay = 0 }: { children: React.ReactNode; className?: string; delay?: number }) {
+  const { ref, inView } = useInView(0.1);
+  return (
+    <div ref={ref} className={className}
+      style={{ opacity: inView ? 1 : 0, transform: inView ? "translateY(0)" : "translateY(50px)", transition: `opacity 0.7s ease ${delay}s, transform 0.7s cubic-bezier(0.22,1,0.36,1) ${delay}s` }}>
+      {children}
+    </div>
+  );
+}
+
+// Типающийся текст
+function TypewriterText({ texts }: { texts: string[] }) {
+  const [idx, setIdx] = useState(0);
+  const [displayed, setDisplayed] = useState("");
+  const [deleting, setDeleting] = useState(false);
+  useEffect(() => {
+    const current = texts[idx];
+    let timer: ReturnType<typeof setTimeout>;
+    if (!deleting && displayed.length < current.length) {
+      timer = setTimeout(() => setDisplayed(current.slice(0, displayed.length + 1)), 80);
+    } else if (!deleting && displayed.length === current.length) {
+      timer = setTimeout(() => setDeleting(true), 2000);
+    } else if (deleting && displayed.length > 0) {
+      timer = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 40);
+    } else if (deleting && displayed.length === 0) {
+      setDeleting(false);
+      setIdx((i) => (i + 1) % texts.length);
+    }
+    return () => clearTimeout(timer);
+  }, [displayed, deleting, idx, texts]);
+  return (
+    <span>
+      {displayed}
+      <span className="animate-pulse" style={{ color: "var(--neon-cyan)" }}>|</span>
+    </span>
+  );
+}
+
 export default function Index() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [navOpen, setNavOpen] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const heroRef = useRef<HTMLElement>(null);
 
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setNavOpen(false);
   };
 
+  // Следим за мышью для эффекта свечения в Hero
+  useEffect(() => {
+    const handler = (e: MouseEvent) => setMousePos({ x: e.clientX, y: e.clientY });
+    window.addEventListener("mousemove", handler);
+    return () => window.removeEventListener("mousemove", handler);
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#050a0f] text-white overflow-x-hidden">
+      {/* Анимированные частицы */}
+      <ParticleCanvas />
+
       {/* Background grid */}
-      <div className="fixed inset-0 grid-bg opacity-60 pointer-events-none z-0" />
-      {/* Ambient glows */}
-      <div className="fixed top-0 left-1/4 w-96 h-96 rounded-full pointer-events-none z-0"
-        style={{ background: "radial-gradient(circle, rgba(0,255,255,0.06) 0%, transparent 70%)" }} />
-      <div className="fixed bottom-1/4 right-1/4 w-80 h-80 rounded-full pointer-events-none z-0"
-        style={{ background: "radial-gradient(circle, rgba(191,95,255,0.06) 0%, transparent 70%)" }} />
+      <div className="fixed inset-0 grid-bg opacity-40 pointer-events-none z-0" />
+
+      {/* Cursor glow */}
+      <div className="fixed pointer-events-none z-0 rounded-full"
+        style={{
+          left: mousePos.x - 200, top: mousePos.y - 200,
+          width: 400, height: 400,
+          background: "radial-gradient(circle, rgba(0,255,255,0.04) 0%, transparent 70%)",
+          transition: "left 0.1s ease, top 0.1s ease",
+        }} />
 
       {/* NAV */}
       <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 py-4"
@@ -151,12 +291,13 @@ export default function Index() {
           <span className="font-orbitron text-lg font-bold tracking-widest neon-text">ASTRIX</span>
         </div>
 
-        {/* Desktop nav */}
         <div className="hidden md:flex items-center gap-8">
           {[["hero", "Главная"], ["pricing", "Тарифы"], ["features", "Характеристики"], ["about", "О нас"], ["faq", "FAQ"]].map(([id, label]) => (
             <button key={id} onClick={() => scrollTo(id)}
-              className="font-ibm text-sm tracking-wider text-gray-400 hover:text-cyan-400 transition-colors duration-300 uppercase">
+              className="font-ibm text-sm tracking-wider text-gray-400 hover:text-cyan-400 transition-colors duration-300 uppercase relative group">
               {label}
+              <span className="absolute -bottom-1 left-0 w-0 h-px group-hover:w-full transition-all duration-300"
+                style={{ background: "var(--neon-cyan)" }} />
             </button>
           ))}
         </div>
@@ -173,7 +314,6 @@ export default function Index() {
           </button>
         </div>
 
-        {/* Mobile burger */}
         <button className="md:hidden text-cyan-400" onClick={() => setNavOpen(!navOpen)}>
           <Icon name={navOpen ? "X" : "Menu"} size={22} />
         </button>
@@ -183,14 +323,20 @@ export default function Index() {
       {navOpen && (
         <div className="fixed inset-0 z-40 pt-20" style={{ background: "rgba(5,10,15,0.97)", backdropFilter: "blur(20px)" }}>
           <div className="flex flex-col items-center gap-6 pt-10">
-            {[["hero", "Главная"], ["pricing", "Тарифы"], ["features", "Характеристики"], ["about", "О нас"], ["faq", "FAQ"]].map(([id, label]) => (
+            {[["hero", "Главная"], ["pricing", "Тарифы"], ["features", "Характеристики"], ["about", "О нас"], ["faq", "FAQ"]].map(([id, label], i) => (
               <button key={id} onClick={() => scrollTo(id)}
-                className="font-orbitron text-lg tracking-widest text-gray-300 hover:text-cyan-400 transition-colors uppercase">
+                className="font-orbitron text-lg tracking-widest text-gray-300 hover:text-cyan-400 transition-colors uppercase"
+                style={{ animationDelay: `${i * 0.05}s` }}>
                 {label}
               </button>
             ))}
+            <button onClick={() => { window.open("http://2.26.80.222", "_blank"); setNavOpen(false); }}
+              className="neon-btn-purple px-8 py-3 rounded text-base font-semibold flex items-center gap-2 mt-2">
+              <Icon name="LayoutDashboard" size={16} />
+              Панель
+            </button>
             <button onClick={() => { buyPlan("START"); setNavOpen(false); }}
-              className="neon-btn px-8 py-3 rounded text-base font-semibold mt-4">
+              className="neon-btn px-8 py-3 rounded text-base font-semibold">
               Начать
             </button>
           </div>
@@ -198,17 +344,22 @@ export default function Index() {
       )}
 
       {/* HERO */}
-      <section id="hero" className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20">
-        {/* Decorative rings */}
+      <section ref={heroRef} id="hero" className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20">
+        {/* Вращающиеся кольца */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-[600px] h-[600px] rounded-full animate-spin-slow opacity-20"
-            style={{ border: "1px solid rgba(0,255,255,0.3)", borderTopColor: "transparent" }} />
-          <div className="absolute w-[400px] h-[400px] rounded-full animate-spin-slow opacity-10"
-            style={{ border: "1px solid rgba(191,95,255,0.5)", borderBottomColor: "transparent", animationDirection: "reverse" }} />
+          <div className="w-[700px] h-[700px] rounded-full animate-spin-slow"
+            style={{ border: "1px solid rgba(0,255,255,0.12)", borderTopColor: "rgba(0,255,255,0.5)", borderRightColor: "transparent" }} />
+          <div className="absolute w-[500px] h-[500px] rounded-full animate-spin-slow"
+            style={{ border: "1px solid rgba(191,95,255,0.1)", borderBottomColor: "rgba(191,95,255,0.4)", animationDirection: "reverse", animationDuration: "14s" }} />
+          <div className="absolute w-[300px] h-[300px] rounded-full animate-spin-slow"
+            style={{ border: "1px dashed rgba(0,255,255,0.08)", animationDuration: "8s" }} />
+          {/* Центральное свечение */}
+          <div className="absolute w-64 h-64 rounded-full"
+            style={{ background: "radial-gradient(circle, rgba(0,255,255,0.07) 0%, transparent 70%)", animation: "pulse-glow 3s ease-in-out infinite" }} />
         </div>
 
         <div className="relative z-10 max-w-4xl">
-          <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full text-xs tracking-widest uppercase"
+          <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full text-xs tracking-widest uppercase animate-fade-in-up"
             style={{ border: "1px solid rgba(0,255,255,0.3)", background: "rgba(0,255,255,0.05)", color: "rgba(0,255,255,0.8)" }}>
             <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
             Европейские серверы онлайн
@@ -220,7 +371,7 @@ export default function Index() {
           </h1>
 
           <p className="font-orbitron text-lg md:text-2xl font-light tracking-[0.2em] text-gray-300 mb-4 animate-fade-in-up stagger-2">
-            HOSTING НОВОГО ПОКОЛЕНИЯ
+            <TypewriterText texts={["HOSTING НОВОГО ПОКОЛЕНИЯ", "АВТОДЕПЛОЙ ЗА 60 СЕКУНД", "VPS В ЕВРОПЕ · AMD RYZEN 9"]} />
           </p>
 
           <p className="font-ibm text-base md:text-lg text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up stagger-3">
@@ -230,23 +381,24 @@ export default function Index() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up stagger-4">
             <button onClick={() => scrollTo("pricing")}
-              className="neon-btn px-8 py-4 rounded text-base font-semibold">
-              Выбрать тариф
+              className="neon-btn px-8 py-4 rounded text-base font-semibold relative overflow-hidden group">
+              <span className="relative z-10">Выбрать тариф</span>
+              <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
+                style={{ background: "linear-gradient(90deg, transparent, rgba(0,255,255,0.2), transparent)" }} />
             </button>
             <button onClick={() => scrollTo("features")}
-              className="neon-btn-purple px-8 py-4 rounded text-base font-semibold">
-              Характеристики
+              className="neon-btn-purple px-8 py-4 rounded text-base font-semibold relative overflow-hidden group">
+              <span className="relative z-10">Характеристики</span>
+              <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
+                style={{ background: "linear-gradient(90deg, transparent, rgba(191,95,255,0.2), transparent)" }} />
             </button>
           </div>
 
-          {/* Stats */}
-          <div className="grid grid-cols-3 gap-6 mt-16 max-w-lg mx-auto animate-fade-in-up stagger-5">
-            {[["99.9%", "Uptime"], ["< 60с", "Развёртывание"], ["24/7", "Поддержка"]].map(([val, label]) => (
-              <div key={label} className="text-center">
-                <div className="font-orbitron text-2xl font-bold" style={{ color: "var(--neon-cyan)" }}>{val}</div>
-                <div className="font-ibm text-xs text-gray-500 uppercase tracking-wider mt-1">{label}</div>
-              </div>
-            ))}
+          {/* Stats с анимированными счётчиками */}
+          <div className="grid grid-cols-3 gap-6 mt-16 max-w-lg mx-auto">
+            <AnimatedStat value={99} label="Uptime" suffix=".9%" />
+            <AnimatedStat value="< 60с" label="Развёртывание" />
+            <AnimatedStat value={247} label="Серверов онлайн" />
           </div>
         </div>
 
@@ -260,60 +412,14 @@ export default function Index() {
       {/* PRICING */}
       <section id="pricing" className="relative py-24 px-6">
         <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
+          <RevealSection className="text-center mb-16">
             <span className="font-orbitron text-xs tracking-[0.3em] uppercase" style={{ color: "var(--neon-cyan)" }}>Тарифные планы</span>
             <h2 className="font-orbitron text-3xl md:text-5xl font-bold mt-3 text-white">ВЫБЕРИТЕ МОЩНОСТЬ</h2>
             <p className="font-ibm text-gray-400 mt-4 text-base">Все серверы на AMD Ryzen 9 3900 · NVMe SSD · Мгновенное развёртывание</p>
-          </div>
+          </RevealSection>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {plans.map((plan) => (
-              <div key={plan.id}
-                className={`relative rounded-xl p-6 ${plan.popular ? "card-glow-featured" : "card-glow"}`}>
-                {plan.popular && (
-                  <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full text-xs font-semibold font-orbitron tracking-wider"
-                    style={{ background: "var(--neon-cyan)", color: "#050a0f" }}>
-                    ПОПУЛЯРНЫЙ
-                  </div>
-                )}
-
-                <div className="flex items-start justify-between mb-4">
-                  <div>
-                    <span className="font-orbitron text-xs tracking-widest text-gray-500 uppercase">{plan.location}</span>
-                    <h3 className="font-orbitron text-xl font-bold mt-1"
-                      style={{ color: plan.color === "purple" ? "var(--neon-purple)" : "var(--neon-cyan)" }}>
-                      {plan.name}
-                    </h3>
-                  </div>
-                  <div className="text-right">
-                    <span className="font-orbitron text-3xl font-black text-white">{plan.price}</span>
-                    <span className="font-ibm text-xs text-gray-500 block">{plan.currency}</span>
-                  </div>
-                </div>
-
-                <div className="space-y-3 mb-6">
-                  {[
-                    { icon: "Cpu", val: plan.cpu },
-                    { icon: "MemoryStick", val: plan.ram + " RAM" },
-                    { icon: "HardDrive", val: plan.disk },
-                    { icon: "Wifi", val: plan.bandwidth },
-                  ].map(({ icon, val }) => (
-                    <div key={val} className="flex items-center gap-3">
-                      <Icon name={icon} size={14} className="text-cyan-400 opacity-70" fallback="Server" />
-                      <span className="font-ibm text-sm text-gray-300">{val}</span>
-                    </div>
-                  ))}
-                </div>
-
-                <button
-                  onClick={() => buyPlan(plan.name)}
-                  className={`w-full py-3 rounded text-sm font-semibold transition-all duration-300 ${
-                    plan.color === "purple" ? "neon-btn-purple" : "neon-btn"
-                  }`}>
-                  КУПИТЬ ТАРИФ
-                </button>
-              </div>
-            ))}
+            {plans.map((plan, i) => <PlanCard key={plan.id} plan={plan} index={i} />)}
           </div>
         </div>
       </section>
@@ -321,67 +427,74 @@ export default function Index() {
       {/* FEATURES */}
       <section id="features" className="relative py-24 px-6">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-16">
+          <RevealSection className="text-center mb-16">
             <span className="font-orbitron text-xs tracking-[0.3em] uppercase" style={{ color: "var(--neon-cyan)" }}>Технологии</span>
             <h2 className="font-orbitron text-3xl md:text-5xl font-bold mt-3 text-white">ХАРАКТЕРИСТИКИ</h2>
-          </div>
+          </RevealSection>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {features.map((f, i) => (
-              <div key={i} className="card-glow rounded-xl p-6 group">
-                <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition-all duration-300 group-hover:scale-110"
-                  style={{ background: "rgba(0,255,255,0.1)", border: "1px solid rgba(0,255,255,0.2)" }}>
-                  <Icon name={f.icon} size={22} className="text-cyan-400" fallback="Server" />
+              <RevealSection key={i} delay={i * 0.07}>
+                <div className="card-glow rounded-xl p-6 group h-full">
+                  <div className="w-12 h-12 rounded-lg flex items-center justify-center mb-4 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6"
+                    style={{ background: "rgba(0,255,255,0.1)", border: "1px solid rgba(0,255,255,0.2)" }}>
+                    <Icon name={f.icon} size={22} className="text-cyan-400" fallback="Server" />
+                  </div>
+                  <h3 className="font-orbitron text-sm font-bold text-white mb-2 tracking-wide">{f.title}</h3>
+                  <p className="font-ibm text-sm text-gray-400 leading-relaxed">{f.desc}</p>
                 </div>
-                <h3 className="font-orbitron text-sm font-bold text-white mb-2 tracking-wide">{f.title}</h3>
-                <p className="font-ibm text-sm text-gray-400 leading-relaxed">{f.desc}</p>
-              </div>
+              </RevealSection>
             ))}
           </div>
 
           {/* CPU highlight */}
-          <div className="mt-10 rounded-2xl p-8 text-center"
-            style={{ background: "linear-gradient(135deg, rgba(0,255,255,0.05), rgba(191,95,255,0.05))", border: "1px solid rgba(0,255,255,0.2)" }}>
-            <div className="font-orbitron text-xs tracking-[0.3em] uppercase text-gray-500 mb-3">Процессор</div>
-            <div className="font-orbitron text-2xl md:text-4xl font-black text-white mb-2">AMD Ryzen 9 3900</div>
-            <div className="flex flex-wrap justify-center gap-6 mt-4">
-              {[["12", "Ядер"], ["24", "Потоков"], ["3.8", "ГГц Base"], ["4.6", "ГГц Boost"]].map(([val, label]) => (
-                <div key={label} className="text-center">
-                  <div className="font-orbitron text-xl font-bold" style={{ color: "var(--neon-cyan)" }}>{val}</div>
-                  <div className="font-ibm text-xs text-gray-500 uppercase tracking-wider">{label}</div>
-                </div>
-              ))}
+          <RevealSection delay={0.2} className="mt-10">
+            <div className="rounded-2xl p-8 text-center relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, rgba(0,255,255,0.05), rgba(191,95,255,0.05))", border: "1px solid rgba(0,255,255,0.2)" }}>
+              <div className="absolute inset-0 pointer-events-none"
+                style={{ background: "radial-gradient(ellipse at 50% 50%, rgba(0,255,255,0.04) 0%, transparent 70%)" }} />
+              <div className="font-orbitron text-xs tracking-[0.3em] uppercase text-gray-500 mb-3">Процессор</div>
+              <div className="font-orbitron text-2xl md:text-4xl font-black text-white mb-2">AMD Ryzen 9 3900</div>
+              <div className="flex flex-wrap justify-center gap-6 mt-4">
+                {[["12", "Ядер"], ["24", "Потоков"], ["3.8", "ГГц Base"], ["4.6", "ГГц Boost"]].map(([val, label]) => (
+                  <div key={label} className="text-center">
+                    <div className="font-orbitron text-xl font-bold" style={{ color: "var(--neon-cyan)" }}>{val}</div>
+                    <div className="font-ibm text-xs text-gray-500 uppercase tracking-wider">{label}</div>
+                  </div>
+                ))}
+              </div>
             </div>
-          </div>
+          </RevealSection>
         </div>
       </section>
 
       {/* ABOUT */}
       <section id="about" className="relative py-24 px-6">
         <div className="max-w-4xl mx-auto">
-          <div className="text-center mb-12">
+          <RevealSection className="text-center mb-12">
             <span className="font-orbitron text-xs tracking-[0.3em] uppercase" style={{ color: "var(--neon-cyan)" }}>Компания</span>
             <h2 className="font-orbitron text-3xl md:text-5xl font-bold mt-3 text-white">О НАС</h2>
-          </div>
+          </RevealSection>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
-            <div className="card-glow rounded-2xl p-8">
-              <h3 className="font-orbitron text-lg font-bold mb-4" style={{ color: "var(--neon-cyan)" }}>
-                Astrix Hosting
-              </h3>
-              <p className="font-ibm text-gray-400 leading-relaxed mb-4">
-                Мы предоставляем высокопроизводительные VPS-серверы в Европе для разработчиков, геймеров и бизнеса.
-                Наша инфраструктура построена на новейшем железе и обеспечивает максимальную стабильность.
-              </p>
-              <p className="font-ibm text-gray-400 leading-relaxed">
-                Поддержка работает 24/7 через Telegram — быстрые ответы и реальная помощь в настройке серверов.
-              </p>
-              <button onClick={() => window.open(`https://t.me/${TELEGRAM_USERNAME}`, "_blank")}
-                className="neon-btn mt-6 px-6 py-3 rounded text-sm font-semibold flex items-center gap-2 w-full justify-center">
-                <Icon name="Send" size={16} />
-                Написать в Telegram
-              </button>
-            </div>
+            <RevealSection delay={0.1}>
+              <div className="card-glow rounded-2xl p-8">
+                <h3 className="font-orbitron text-lg font-bold mb-4" style={{ color: "var(--neon-cyan)" }}>Astrix Hosting</h3>
+                <p className="font-ibm text-gray-400 leading-relaxed mb-4">
+                  Мы предоставляем высокопроизводительные VPS-серверы в Европе для разработчиков, геймеров и бизнеса.
+                  Наша инфраструктура построена на новейшем железе и обеспечивает максимальную стабильность.
+                </p>
+                <p className="font-ibm text-gray-400 leading-relaxed">
+                  Поддержка работает 24/7 через Telegram — быстрые ответы и реальная помощь в настройке серверов.
+                </p>
+                <button onClick={() => window.open(`https://t.me/${TELEGRAM_USERNAME}`, "_blank")}
+                  className="neon-btn mt-6 px-6 py-3 rounded text-sm font-semibold flex items-center gap-2 w-full justify-center relative overflow-hidden group">
+                  <span className="relative z-10 flex items-center gap-2"><Icon name="Send" size={16} />Написать в Telegram</span>
+                  <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
+                    style={{ background: "linear-gradient(90deg, transparent, rgba(0,255,255,0.15), transparent)" }} />
+                </button>
+              </div>
+            </RevealSection>
 
             <div className="space-y-4">
               {[
@@ -390,17 +503,19 @@ export default function Index() {
                 { icon: "Headphones", title: "Поддержка", desc: "Telegram 24/7, ответ в течение 15 минут" },
                 { icon: "Lock", title: "Безопасность", desc: "DDoS-защита, изолированные среды" },
               ].map((item, i) => (
-                <div key={i} className="flex items-start gap-4 p-4 rounded-xl"
-                  style={{ background: "rgba(0,255,255,0.03)", border: "1px solid rgba(0,255,255,0.1)" }}>
-                  <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
-                    style={{ background: "rgba(0,255,255,0.1)" }}>
-                    <Icon name={item.icon} size={16} className="text-cyan-400" fallback="Info" />
+                <RevealSection key={i} delay={0.1 + i * 0.07}>
+                  <div className="flex items-start gap-4 p-4 rounded-xl transition-all duration-300 hover:scale-[1.02]"
+                    style={{ background: "rgba(0,255,255,0.03)", border: "1px solid rgba(0,255,255,0.1)" }}>
+                    <div className="w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0"
+                      style={{ background: "rgba(0,255,255,0.1)" }}>
+                      <Icon name={item.icon} size={16} className="text-cyan-400" fallback="Info" />
+                    </div>
+                    <div>
+                      <div className="font-orbitron text-xs font-bold text-white tracking-wide">{item.title}</div>
+                      <div className="font-ibm text-sm text-gray-400 mt-0.5">{item.desc}</div>
+                    </div>
                   </div>
-                  <div>
-                    <div className="font-orbitron text-xs font-bold text-white tracking-wide">{item.title}</div>
-                    <div className="font-ibm text-sm text-gray-400 mt-0.5">{item.desc}</div>
-                  </div>
-                </div>
+                </RevealSection>
               ))}
             </div>
           </div>
@@ -410,30 +525,41 @@ export default function Index() {
       {/* FAQ */}
       <section id="faq" className="relative py-24 px-6">
         <div className="max-w-3xl mx-auto">
-          <div className="text-center mb-16">
+          <RevealSection className="text-center mb-16">
             <span className="font-orbitron text-xs tracking-[0.3em] uppercase" style={{ color: "var(--neon-cyan)" }}>Вопросы</span>
             <h2 className="font-orbitron text-3xl md:text-5xl font-bold mt-3 text-white">FAQ</h2>
-          </div>
+          </RevealSection>
 
           <div className="space-y-3">
             {faqs.map((faq, i) => (
-              <div key={i} className="rounded-xl overflow-hidden transition-all duration-300"
-                style={{ border: openFaq === i ? "1px solid rgba(0,255,255,0.4)" : "1px solid rgba(0,255,255,0.1)", background: "rgba(7,14,22,0.8)" }}>
-                <button
-                  className="w-full flex items-center justify-between p-5 text-left"
-                  onClick={() => setOpenFaq(openFaq === i ? null : i)}>
-                  <span className="font-ibm text-sm md:text-base font-medium text-white pr-4">{faq.q}</span>
-                  <Icon name={openFaq === i ? "ChevronUp" : "ChevronDown"} size={18} className="text-cyan-400 flex-shrink-0" />
-                </button>
-                {openFaq === i && (
-                  <div className="px-5 pb-5">
-                    <p className="font-ibm text-sm text-gray-400 leading-relaxed"
+              <RevealSection key={i} delay={i * 0.06}>
+                <div className="rounded-xl overflow-hidden"
+                  style={{
+                    border: openFaq === i ? "1px solid rgba(0,255,255,0.4)" : "1px solid rgba(0,255,255,0.1)",
+                    background: "rgba(7,14,22,0.8)",
+                    boxShadow: openFaq === i ? "0 0 30px rgba(0,255,255,0.08)" : "none",
+                    transition: "border-color 0.3s ease, box-shadow 0.3s ease",
+                  }}>
+                  <button
+                    className="w-full flex items-center justify-between p-5 text-left group"
+                    onClick={() => setOpenFaq(openFaq === i ? null : i)}>
+                    <span className="font-ibm text-sm md:text-base font-medium text-white pr-4 group-hover:text-cyan-300 transition-colors duration-200">{faq.q}</span>
+                    <div style={{ transform: openFaq === i ? "rotate(180deg)" : "rotate(0deg)", transition: "transform 0.3s ease" }}>
+                      <Icon name="ChevronDown" size={18} className="text-cyan-400 flex-shrink-0" />
+                    </div>
+                  </button>
+                  <div style={{
+                    maxHeight: openFaq === i ? "200px" : "0",
+                    overflow: "hidden",
+                    transition: "max-height 0.4s cubic-bezier(0.4,0,0.2,1)",
+                  }}>
+                    <p className="font-ibm text-sm text-gray-400 leading-relaxed px-5 pb-5"
                       style={{ borderTop: "1px solid rgba(0,255,255,0.1)", paddingTop: "16px" }}>
                       {faq.a}
                     </p>
                   </div>
-                )}
-              </div>
+                </div>
+              </RevealSection>
             ))}
           </div>
         </div>
@@ -441,30 +567,42 @@ export default function Index() {
 
       {/* CTA */}
       <section className="relative py-24 px-6">
-        <div className="max-w-3xl mx-auto text-center">
-          <div className="rounded-2xl p-10"
-            style={{ background: "linear-gradient(135deg, rgba(0,255,255,0.08), rgba(191,95,255,0.08))", border: "1px solid rgba(0,255,255,0.25)", boxShadow: "0 0 80px rgba(0,255,255,0.08)" }}>
-            <h2 className="font-orbitron text-2xl md:text-4xl font-black text-white mb-4">ГОТОВ НАЧАТЬ?</h2>
-            <p className="font-ibm text-gray-400 mb-8 text-base">
-              Выбери тариф и получи мощный сервер в Европе за 60 секунд
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button onClick={() => scrollTo("pricing")} className="neon-btn px-8 py-4 rounded text-base font-semibold">
-                ВЫБРАТЬ ТАРИФ
-              </button>
-              <button onClick={() => window.open(`https://t.me/${TELEGRAM_USERNAME}`, "_blank")}
-                className="neon-btn-purple px-8 py-4 rounded text-base font-semibold flex items-center justify-center gap-2">
-                <Icon name="Send" size={16} />
-                TELEGRAM
-              </button>
+        <RevealSection>
+          <div className="max-w-3xl mx-auto text-center">
+            <div className="rounded-2xl p-10 relative overflow-hidden"
+              style={{ background: "linear-gradient(135deg, rgba(0,255,255,0.08), rgba(191,95,255,0.08))", border: "1px solid rgba(0,255,255,0.25)", boxShadow: "0 0 80px rgba(0,255,255,0.08)" }}>
+              {/* Анимированный фон */}
+              <div className="absolute inset-0 pointer-events-none overflow-hidden">
+                <div className="absolute -top-20 -left-20 w-64 h-64 rounded-full animate-spin-slow"
+                  style={{ border: "1px solid rgba(0,255,255,0.06)", borderTopColor: "transparent" }} />
+                <div className="absolute -bottom-10 -right-10 w-48 h-48 rounded-full animate-spin-slow"
+                  style={{ border: "1px solid rgba(191,95,255,0.06)", animationDirection: "reverse", animationDuration: "12s" }} />
+              </div>
+              <h2 className="font-orbitron text-2xl md:text-4xl font-black text-white mb-4 relative z-10">ГОТОВ НАЧАТЬ?</h2>
+              <p className="font-ibm text-gray-400 mb-8 text-base relative z-10">
+                Выбери тариф и получи мощный сервер в Европе за 60 секунд
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center relative z-10">
+                <button onClick={() => scrollTo("pricing")}
+                  className="neon-btn px-8 py-4 rounded text-base font-semibold relative overflow-hidden group">
+                  <span className="relative z-10">ВЫБРАТЬ ТАРИФ</span>
+                  <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
+                    style={{ background: "linear-gradient(90deg, transparent, rgba(0,255,255,0.2), transparent)" }} />
+                </button>
+                <button onClick={() => window.open(`https://t.me/${TELEGRAM_USERNAME}`, "_blank")}
+                  className="neon-btn-purple px-8 py-4 rounded text-base font-semibold flex items-center justify-center gap-2 relative overflow-hidden group">
+                  <span className="relative z-10 flex items-center gap-2"><Icon name="Send" size={16} />TELEGRAM</span>
+                  <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
+                    style={{ background: "linear-gradient(90deg, transparent, rgba(191,95,255,0.2), transparent)" }} />
+                </button>
+              </div>
             </div>
           </div>
-        </div>
+        </RevealSection>
       </section>
 
       {/* FOOTER */}
-      <footer className="py-8 px-6 text-center"
-        style={{ borderTop: "1px solid rgba(0,255,255,0.1)" }}>
+      <footer className="py-8 px-6 text-center" style={{ borderTop: "1px solid rgba(0,255,255,0.1)" }}>
         <div className="flex items-center justify-center gap-3 mb-3">
           <span className="font-orbitron text-sm font-bold tracking-widest neon-text">ASTRIX</span>
           <span className="text-gray-600">·</span>
