@@ -267,6 +267,18 @@ export default function Index() {
   const [navOpen, setNavOpen] = useState(false);
   const [pricingTab, setPricingTab] = useState("de");
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [panelModal, setPanelModal] = useState(false);
+  const [form, setForm] = useState({ name: "", tg: "", email: "", comment: "" });
+  const [formSent, setFormSent] = useState(false);
+
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const msg = encodeURIComponent(
+      `📋 Заявка на аккаунт в панели:\n👤 Имя: ${form.name}\n💬 Telegram: ${form.tg}\n📧 Email: ${form.email}\n📝 Комментарий: ${form.comment}`
+    );
+    window.open(`https://t.me/HellwayYT?text=${msg}`, "_blank");
+    setFormSent(true);
+  };
   const heroRef = useRef<HTMLElement>(null);
 
   const scrollTo = (id: string) => {
@@ -321,7 +333,7 @@ export default function Index() {
         </div>
 
         <div className="hidden md:flex items-center gap-3">
-          <button onClick={() => window.open("http://2.26.80.222", "_blank")}
+          <button onClick={() => setPanelModal(true)}
             className="neon-btn-purple px-5 py-2 rounded text-sm font-semibold flex items-center gap-2">
             <Icon name="LayoutDashboard" size={14} />
             Панель
@@ -348,7 +360,7 @@ export default function Index() {
                 {label}
               </button>
             ))}
-            <button onClick={() => { window.open("http://2.26.80.222", "_blank"); setNavOpen(false); }}
+            <button onClick={() => { setPanelModal(true); setNavOpen(false); }}
               className="neon-btn-purple px-8 py-3 rounded text-base font-semibold flex items-center gap-2 mt-2">
               <Icon name="LayoutDashboard" size={16} />
               Панель
@@ -647,6 +659,115 @@ export default function Index() {
           </div>
         </RevealSection>
       </section>
+
+      {/* МОДАЛКА ПАНЕЛИ */}
+      {panelModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+          style={{ background: "rgba(5,10,15,0.92)", backdropFilter: "blur(16px)" }}
+          onClick={(e) => { if (e.target === e.currentTarget) { setPanelModal(false); setFormSent(false); } }}>
+          <div className="relative w-full max-w-lg rounded-2xl overflow-hidden"
+            style={{ background: "linear-gradient(135deg, rgba(7,14,22,0.98), rgba(5,10,15,0.99))", border: "1px solid rgba(191,95,255,0.4)", boxShadow: "0 0 80px rgba(191,95,255,0.15), 0 0 40px rgba(0,255,255,0.08)" }}>
+
+            {/* Закрыть */}
+            <button onClick={() => { setPanelModal(false); setFormSent(false); }}
+              className="absolute top-4 right-4 text-gray-500 hover:text-cyan-400 transition-colors z-10">
+              <Icon name="X" size={20} />
+            </button>
+
+            <div className="p-8">
+              {/* Иконка */}
+              <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5"
+                style={{ background: "rgba(191,95,255,0.15)", border: "1px solid rgba(191,95,255,0.4)" }}>
+                <Icon name="LayoutDashboard" size={26} className="text-purple-400" />
+              </div>
+
+              <h3 className="font-orbitron text-xl font-bold text-white mb-2">Доступ к панели</h3>
+              <p className="font-ibm text-gray-400 text-sm leading-relaxed mb-6">
+                Для входа в панель управления необходимо создать аккаунт. Напишите разработчику&nbsp;
+                <span style={{ color: "var(--neon-cyan)" }}>@HellwayYT</span> в Telegram — он создаст ваш аккаунт.
+              </p>
+
+              {/* Кнопка Telegram */}
+              <button onClick={() => window.open("https://t.me/HellwayYT?text=Привет! Хочу получить аккаунт в панели Astrix Hosting", "_blank")}
+                className="w-full neon-btn py-3 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 mb-6 relative overflow-hidden group">
+                <span className="relative z-10 flex items-center gap-2">
+                  <Icon name="Send" size={16} />
+                  Написать @HellwayYT в Telegram
+                </span>
+                <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
+                  style={{ background: "linear-gradient(90deg, transparent, rgba(0,255,255,0.15), transparent)" }} />
+              </button>
+
+              {/* Разделитель */}
+              <div className="flex items-center gap-3 mb-6">
+                <div className="flex-1 h-px" style={{ background: "rgba(0,255,255,0.1)" }} />
+                <span className="font-ibm text-xs text-gray-600 uppercase tracking-widest">или заполните форму</span>
+                <div className="flex-1 h-px" style={{ background: "rgba(0,255,255,0.1)" }} />
+              </div>
+
+              {!formSent ? (
+                <form onSubmit={handleFormSubmit} className="space-y-3">
+                  <div>
+                    <label className="font-ibm text-xs text-gray-500 uppercase tracking-wider block mb-1.5">Ваше имя *</label>
+                    <input required value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
+                      placeholder="Иван Иванов"
+                      className="w-full px-4 py-2.5 rounded-lg font-ibm text-sm text-white placeholder-gray-600 outline-none transition-all duration-300"
+                      style={{ background: "rgba(0,255,255,0.04)", border: "1px solid rgba(0,255,255,0.15)" }}
+                      onFocus={e => e.target.style.borderColor = "rgba(0,255,255,0.5)"}
+                      onBlur={e => e.target.style.borderColor = "rgba(0,255,255,0.15)"} />
+                  </div>
+                  <div>
+                    <label className="font-ibm text-xs text-gray-500 uppercase tracking-wider block mb-1.5">Telegram *</label>
+                    <input required value={form.tg} onChange={e => setForm({ ...form, tg: e.target.value })}
+                      placeholder="@username"
+                      className="w-full px-4 py-2.5 rounded-lg font-ibm text-sm text-white placeholder-gray-600 outline-none transition-all duration-300"
+                      style={{ background: "rgba(0,255,255,0.04)", border: "1px solid rgba(0,255,255,0.15)" }}
+                      onFocus={e => e.target.style.borderColor = "rgba(0,255,255,0.5)"}
+                      onBlur={e => e.target.style.borderColor = "rgba(0,255,255,0.15)"} />
+                  </div>
+                  <div>
+                    <label className="font-ibm text-xs text-gray-500 uppercase tracking-wider block mb-1.5">Email</label>
+                    <input type="email" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
+                      placeholder="email@example.com"
+                      className="w-full px-4 py-2.5 rounded-lg font-ibm text-sm text-white placeholder-gray-600 outline-none transition-all duration-300"
+                      style={{ background: "rgba(0,255,255,0.04)", border: "1px solid rgba(0,255,255,0.15)" }}
+                      onFocus={e => e.target.style.borderColor = "rgba(0,255,255,0.5)"}
+                      onBlur={e => e.target.style.borderColor = "rgba(0,255,255,0.15)"} />
+                  </div>
+                  <div>
+                    <label className="font-ibm text-xs text-gray-500 uppercase tracking-wider block mb-1.5">Комментарий</label>
+                    <textarea value={form.comment} onChange={e => setForm({ ...form, comment: e.target.value })}
+                      placeholder="Какой тариф вас интересует, ваши пожелания..."
+                      rows={3}
+                      className="w-full px-4 py-2.5 rounded-lg font-ibm text-sm text-white placeholder-gray-600 outline-none transition-all duration-300 resize-none"
+                      style={{ background: "rgba(0,255,255,0.04)", border: "1px solid rgba(0,255,255,0.15)" }}
+                      onFocus={e => e.target.style.borderColor = "rgba(0,255,255,0.5)"}
+                      onBlur={e => e.target.style.borderColor = "rgba(0,255,255,0.15)"} />
+                  </div>
+                  <button type="submit"
+                    className="w-full neon-btn-purple py-3 rounded-lg text-sm font-semibold mt-2 flex items-center justify-center gap-2">
+                    <Icon name="Send" size={15} />
+                    Отправить заявку
+                  </button>
+                </form>
+              ) : (
+                <div className="text-center py-6">
+                  <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4"
+                    style={{ background: "rgba(0,255,255,0.1)", border: "1px solid rgba(0,255,255,0.4)" }}>
+                    <Icon name="Check" size={28} className="text-cyan-400" />
+                  </div>
+                  <p className="font-orbitron text-base font-bold text-white mb-2">Заявка отправлена!</p>
+                  <p className="font-ibm text-sm text-gray-400">@HellwayYT свяжется с вами и создаст аккаунт в ближайшее время.</p>
+                  <button onClick={() => { setPanelModal(false); setFormSent(false); setForm({ name: "", tg: "", email: "", comment: "" }); }}
+                    className="neon-btn mt-5 px-6 py-2 rounded text-sm font-semibold">
+                    Закрыть
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* FOOTER */}
       <footer className="py-8 px-6 text-center" style={{ borderTop: "1px solid rgba(0,255,255,0.1)" }}>
