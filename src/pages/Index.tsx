@@ -275,6 +275,19 @@ export default function Index() {
   const [promoError, setPromoError] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminTab, setAdminTab] = useState<"forms" | "logs">("forms");
+  const [openChat, setOpenChat] = useState<number | null>(null);
+  const [replyTexts, setReplyTexts] = useState<Record<number, string>>({});
+  const [chats, setChats] = useState<Record<number, { from: "admin" | "user"; text: string; time: string }[]>>({});
+  const chatEndRef = useRef<HTMLDivElement>(null);
+
+  const sendReply = (idx: number) => {
+    const text = (replyTexts[idx] || "").trim();
+    if (!text) return;
+    const msg = { from: "admin" as const, text, time: new Date().toLocaleTimeString("ru-RU", { hour: "2-digit", minute: "2-digit" }) };
+    setChats(prev => ({ ...prev, [idx]: [...(prev[idx] || []), msg] }));
+    setReplyTexts(prev => ({ ...prev, [idx]: "" }));
+    setTimeout(() => chatEndRef.current?.scrollIntoView({ behavior: "smooth" }), 50);
+  };
 
   const ADMIN_CODE = "adminHell123";
 
@@ -900,23 +913,94 @@ export default function Index() {
                 ) : (
                   <div className="divide-y" style={{ borderColor: "rgba(0,255,100,0.08)" }}>
                     {submissions.map((s, i) => (
-                      <div key={i} className="px-5 py-4">
-                        <div className="flex items-start justify-between mb-1.5">
+                      <div key={i}>
+                        {/* Шапка заявки */}
+                        <button className="w-full px-5 py-3 flex items-center justify-between hover:bg-white/[0.02] transition-colors"
+                          onClick={() => setOpenChat(openChat === i ? null : i)}>
                           <div className="flex items-center gap-2">
-                            <Icon name="User" size={13} className="text-green-400 opacity-70" />
-                            <span className="font-ibm text-sm font-medium text-white">{s.name}</span>
-                            <span className="font-ibm text-xs text-cyan-400">{s.tg}</span>
+                            <div className="w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold"
+                              style={{ background: "rgba(0,255,100,0.15)", color: "#00ff64" }}>
+                              {s.name[0]?.toUpperCase()}
+                            </div>
+                            <div className="text-left">
+                              <div className="flex items-center gap-2">
+                                <span className="font-ibm text-sm font-medium text-white">{s.name}</span>
+                                <span className="font-ibm text-xs text-cyan-400">{s.tg}</span>
+                              </div>
+                              <p className="font-ibm text-xs text-gray-600 truncate max-w-[200px]">{s.comment || s.email || "Без комментария"}</p>
+                            </div>
                           </div>
-                          <span className="font-ibm text-xs text-gray-600">{s.date}</span>
-                        </div>
-                        {s.email && <p className="font-ibm text-xs text-gray-500 mb-1">📧 {s.email}</p>}
-                        {s.comment && <p className="font-ibm text-xs text-gray-400 leading-relaxed">💬 {s.comment}</p>}
-                        <button onClick={() => window.open(`https://t.me/${s.tg.replace("@", "")}`, "_blank")}
-                          className="mt-2 font-ibm text-xs px-3 py-1 rounded flex items-center gap-1.5 transition-all duration-200 hover:opacity-90"
-                          style={{ background: "rgba(0,255,100,0.1)", color: "#00ff64", border: "1px solid rgba(0,255,100,0.3)" }}>
-                          <Icon name="Send" size={11} />
-                          Ответить в Telegram
+                          <div className="flex items-center gap-2">
+                            {(chats[i]?.length || 0) > 0 && (
+                              <span className="font-ibm text-xs px-2 py-0.5 rounded-full"
+                                style={{ background: "rgba(0,255,100,0.15)", color: "#00ff64" }}>
+                                {chats[i].length}
+                              </span>
+                            )}
+                            <Icon name={openChat === i ? "ChevronUp" : "ChevronDown"} size={14} className="text-gray-600" />
+                          </div>
                         </button>
+
+                        {/* Раскрывающийся чат */}
+                        {openChat === i && (
+                          <div style={{ borderTop: "1px solid rgba(0,255,100,0.06)", background: "rgba(0,0,0,0.3)" }}>
+                            {/* Инфо о заявке */}
+                            <div className="px-5 py-3 space-y-1" style={{ borderBottom: "1px solid rgba(0,255,100,0.06)" }}>
+                              {s.email && <p className="font-ibm text-xs text-gray-500">📧 {s.email}</p>}
+                              {s.comment && <p className="font-ibm text-xs text-gray-400">💬 {s.comment}</p>}
+                              <p className="font-ibm text-xs text-gray-600">🕐 {s.date}</p>
+                            </div>
+
+                            {/* Сообщения чата */}
+                            <div className="px-5 py-3 space-y-2 overflow-y-auto" style={{ maxHeight: "160px" }}>
+                              {/* Исходное сообщение от пользователя */}
+                              <div className="flex justify-start">
+                                <div className="max-w-[80%] px-3 py-2 rounded-xl rounded-tl-sm"
+                                  style={{ background: "rgba(0,255,255,0.08)", border: "1px solid rgba(0,255,255,0.15)" }}>
+                                  <p className="font-ibm text-xs text-gray-300">{s.comment || "Нет комментария"}</p>
+                                  <p className="font-ibm text-[10px] text-gray-600 mt-1">{s.name} · {s.date}</p>
+                                </div>
+                              </div>
+                              {/* Сообщения администратора */}
+                              {(chats[i] || []).map((msg, mi) => (
+                                <div key={mi} className={`flex ${msg.from === "admin" ? "justify-end" : "justify-start"}`}>
+                                  <div className="max-w-[80%] px-3 py-2 rounded-xl"
+                                    style={msg.from === "admin"
+                                      ? { background: "rgba(0,255,100,0.12)", border: "1px solid rgba(0,255,100,0.25)", borderBottomRightRadius: "4px" }
+                                      : { background: "rgba(0,255,255,0.08)", border: "1px solid rgba(0,255,255,0.15)", borderBottomLeftRadius: "4px" }}>
+                                    <p className="font-ibm text-xs text-gray-200">{msg.text}</p>
+                                    <p className="font-ibm text-[10px] text-gray-600 mt-1">
+                                      {msg.from === "admin" ? "Вы" : s.name} · {msg.time}
+                                    </p>
+                                  </div>
+                                </div>
+                              ))}
+                              <div ref={chatEndRef} />
+                            </div>
+
+                            {/* Поле ввода */}
+                            <div className="px-5 py-3 flex gap-2" style={{ borderTop: "1px solid rgba(0,255,100,0.06)" }}>
+                              <input
+                                value={replyTexts[i] || ""}
+                                onChange={e => setReplyTexts(prev => ({ ...prev, [i]: e.target.value }))}
+                                onKeyDown={e => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); sendReply(i); } }}
+                                placeholder="Написать ответ..."
+                                className="flex-1 px-3 py-2 rounded-lg font-ibm text-xs text-white placeholder-gray-600 outline-none"
+                                style={{ background: "rgba(0,255,100,0.05)", border: "1px solid rgba(0,255,100,0.2)" }} />
+                              <button onClick={() => sendReply(i)}
+                                className="px-3 py-2 rounded-lg flex items-center gap-1.5 transition-all duration-200 hover:opacity-90"
+                                style={{ background: "rgba(0,255,100,0.15)", border: "1px solid rgba(0,255,100,0.3)", color: "#00ff64" }}>
+                                <Icon name="Send" size={13} />
+                              </button>
+                              <button onClick={() => window.open(`https://t.me/${s.tg.replace("@", "")}`, "_blank")}
+                                title="Открыть в Telegram"
+                                className="px-3 py-2 rounded-lg flex items-center transition-all duration-200 hover:opacity-90"
+                                style={{ background: "rgba(0,180,255,0.1)", border: "1px solid rgba(0,180,255,0.25)", color: "#00bfff" }}>
+                                <Icon name="ExternalLink" size={13} />
+                              </button>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     ))}
                   </div>
