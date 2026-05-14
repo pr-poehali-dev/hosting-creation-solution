@@ -333,14 +333,15 @@ export default function Index() {
         </div>
 
         <div className="hidden md:flex items-center gap-3">
-          <button onClick={() => setPanelModal(true)}
+          <button onClick={() => window.open("http://2.26.80.222", "_blank")}
             className="neon-btn-purple px-5 py-2 rounded text-sm font-semibold flex items-center gap-2">
             <Icon name="LayoutDashboard" size={14} />
             Панель
           </button>
-          <button onClick={() => buyPlan("START")}
-            className="neon-btn px-5 py-2 rounded text-sm font-semibold">
-            Начать
+          <button onClick={() => setPanelModal(true)}
+            className="neon-btn px-5 py-2 rounded text-sm font-semibold flex items-center gap-2">
+            <Icon name="ClipboardList" size={14} />
+            Заявка
           </button>
         </div>
 
@@ -360,14 +361,15 @@ export default function Index() {
                 {label}
               </button>
             ))}
-            <button onClick={() => { setPanelModal(true); setNavOpen(false); }}
+            <button onClick={() => { window.open("http://2.26.80.222", "_blank"); setNavOpen(false); }}
               className="neon-btn-purple px-8 py-3 rounded text-base font-semibold flex items-center gap-2 mt-2">
               <Icon name="LayoutDashboard" size={16} />
               Панель
             </button>
-            <button onClick={() => { buyPlan("START"); setNavOpen(false); }}
-              className="neon-btn px-8 py-3 rounded text-base font-semibold">
-              Начать
+            <button onClick={() => { setPanelModal(true); setNavOpen(false); }}
+              className="neon-btn px-8 py-3 rounded text-base font-semibold flex items-center gap-2">
+              <Icon name="ClipboardList" size={16} />
+              Заявка
             </button>
           </div>
         </div>
