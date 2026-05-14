@@ -1,15 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import Icon from "@/components/ui/icon";
 
-const TELEGRAM_USERNAME = "HellwayYT";
+const TELEGRAM_USERNAME = "AstrixHosting";
 
 const plans = [
-  { id: "start", name: "START", location: "🇩🇪 Германия", price: "149", currency: "₽/мес", cpu: "2 vCPU", ram: "4 GB", disk: "50 GB NVMe", bandwidth: "1 Гбит/с", popular: false, color: "cyan" },
-  { id: "pro", name: "PRO", location: "🇩🇪 Германия", price: "349", currency: "₽/мес", cpu: "4 vCPU", ram: "8 GB", disk: "100 GB NVMe", bandwidth: "1 Гбит/с", popular: true, color: "cyan" },
-  { id: "ultra", name: "ULTRA", location: "🇩🇪 Германия", price: "699", currency: "₽/мес", cpu: "8 vCPU", ram: "16 GB", disk: "200 GB NVMe", bandwidth: "10 Гбит/с", popular: false, color: "purple" },
-  { id: "start-fi", name: "START FI", location: "🇫🇮 Финляндия", price: "129", currency: "₽/мес", cpu: "2 vCPU", ram: "4 GB", disk: "50 GB NVMe", bandwidth: "1 Гбит/с", popular: false, color: "cyan" },
-  { id: "pro-fi", name: "PRO FI", location: "🇫🇮 Финляндия", price: "299", currency: "₽/мес", cpu: "4 vCPU", ram: "8 GB", disk: "100 GB NVMe", bandwidth: "1 Гбит/с", popular: false, color: "cyan" },
-  { id: "ultra-fi", name: "ULTRA FI", location: "🇫🇮 Финляндия", price: "599", currency: "₽/мес", cpu: "8 vCPU", ram: "16 GB", disk: "200 GB NVMe", bandwidth: "10 Гбит/с", popular: false, color: "purple" },
+  { id: "game-lite", name: "GAME LITE", location: "🇩🇪 Германия", price: "89", currency: "₽/мес", cpu: "2 vCPU", ram: "4 GB", disk: "30 GB NVMe", bandwidth: "1 Гбит/с", slots: "до 10 слотов", popular: false, color: "cyan", tag: "🎮 Игровой" },
+  { id: "game-start", name: "GAME START", location: "🇩🇪 Германия", price: "149", currency: "₽/мес", cpu: "3 vCPU", ram: "6 GB", disk: "50 GB NVMe", bandwidth: "1 Гбит/с", slots: "до 20 слотов", popular: false, color: "cyan", tag: "🎮 Игровой" },
+  { id: "game-pro", name: "GAME PRO", location: "🇩🇪 Германия", price: "249", currency: "₽/мес", cpu: "4 vCPU", ram: "8 GB", disk: "80 GB NVMe", bandwidth: "1 Гбит/с", slots: "до 40 слотов", popular: true, color: "cyan", tag: "🎮 Игровой" },
+  { id: "game-ultra", name: "GAME ULTRA", location: "🇩🇪 Германия", price: "449", currency: "₽/мес", cpu: "6 vCPU", ram: "16 GB", disk: "150 GB NVMe", bandwidth: "10 Гбит/с", slots: "до 80 слотов", popular: false, color: "purple", tag: "🔥 Топ" },
+  { id: "game-fi-lite", name: "GAME FI LITE", location: "🇫🇮 Финляндия", price: "79", currency: "₽/мес", cpu: "2 vCPU", ram: "4 GB", disk: "30 GB NVMe", bandwidth: "1 Гбит/с", slots: "до 10 слотов", popular: false, color: "cyan", tag: "🎮 Игровой" },
+  { id: "game-fi-start", name: "GAME FI START", location: "🇫🇮 Финляндия", price: "129", currency: "₽/мес", cpu: "3 vCPU", ram: "6 GB", disk: "50 GB NVMe", bandwidth: "1 Гбит/с", slots: "до 20 слотов", popular: false, color: "cyan", tag: "🎮 Игровой" },
+  { id: "game-fi-pro", name: "GAME FI PRO", location: "🇫🇮 Финляндия", price: "219", currency: "₽/мес", cpu: "4 vCPU", ram: "8 GB", disk: "80 GB NVMe", bandwidth: "1 Гбит/с", slots: "до 40 слотов", popular: false, color: "cyan", tag: "🎮 Игровой" },
+  { id: "game-fi-ultra", name: "GAME FI ULTRA", location: "🇫🇮 Финляндия", price: "399", currency: "₽/мес", cpu: "6 vCPU", ram: "16 GB", disk: "150 GB NVMe", bandwidth: "10 Гбит/с", slots: "до 80 слотов", popular: false, color: "purple", tag: "🔥 Топ" },
 ];
 
 const features = [
@@ -161,8 +163,14 @@ function PlanCard({ plan, index }: { plan: typeof plans[0]; index: number }) {
           ПОПУЛЯРНЫЙ
         </div>
       )}
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex items-start justify-between mb-3">
         <div>
+          <div className="flex items-center gap-2 mb-1">
+            <span className="font-ibm text-xs px-2 py-0.5 rounded-full"
+              style={{ background: plan.color === "purple" ? "rgba(191,95,255,0.15)" : "rgba(0,255,255,0.1)", color: plan.color === "purple" ? "var(--neon-purple)" : "var(--neon-cyan)", border: `1px solid ${plan.color === "purple" ? "rgba(191,95,255,0.3)" : "rgba(0,255,255,0.2)"}` }}>
+              {plan.tag}
+            </span>
+          </div>
           <span className="font-orbitron text-xs tracking-widest text-gray-500 uppercase">{plan.location}</span>
           <h3 className="font-orbitron text-xl font-bold mt-1"
             style={{ color: plan.color === "purple" ? "var(--neon-purple)" : "var(--neon-cyan)" }}>
@@ -174,10 +182,10 @@ function PlanCard({ plan, index }: { plan: typeof plans[0]; index: number }) {
           <span className="font-ibm text-xs text-gray-500 block">{plan.currency}</span>
         </div>
       </div>
-      <div className="space-y-3 mb-6">
-        {[{ icon: "Cpu", val: plan.cpu }, { icon: "MemoryStick", val: plan.ram + " RAM" }, { icon: "HardDrive", val: plan.disk }, { icon: "Wifi", val: plan.bandwidth }].map(({ icon, val }) => (
+      <div className="space-y-2.5 mb-6">
+        {[{ icon: "Cpu", val: plan.cpu }, { icon: "MemoryStick", val: plan.ram + " RAM" }, { icon: "HardDrive", val: plan.disk }, { icon: "Wifi", val: plan.bandwidth }, { icon: "Gamepad2", val: plan.slots }].map(({ icon, val }) => (
           <div key={val} className="flex items-center gap-3">
-            <Icon name={icon} size={14} className="text-cyan-400 opacity-70" fallback="Server" />
+            <Icon name={icon} size={13} className="text-cyan-400 opacity-70" fallback="Server" />
             <span className="font-ibm text-sm text-gray-300">{val}</span>
           </div>
         ))}
@@ -371,12 +379,12 @@ export default function Index() {
           </h1>
 
           <p className="font-orbitron text-lg md:text-2xl font-light tracking-[0.2em] text-gray-300 mb-4 animate-fade-in-up stagger-2">
-            <TypewriterText texts={["HOSTING НОВОГО ПОКОЛЕНИЯ", "АВТОДЕПЛОЙ ЗА 60 СЕКУНД", "VPS В ЕВРОПЕ · AMD RYZEN 9"]} />
+            <TypewriterText texts={["ИГРОВЫЕ СЕРВЕРЫ В ЕВРОПЕ", "АВТОДЕПЛОЙ ЗА 60 СЕКУНД", "AMD RYZEN 9 · МИНИМАЛЬНЫЙ ПИНГ"]} />
           </p>
 
           <p className="font-ibm text-base md:text-lg text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in-up stagger-3">
-            VPS-серверы в Германии и Финляндии на базе AMD Ryzen&nbsp;9&nbsp;3900.<br />
-            Автоматическое развёртывание за 60 секунд.
+            Игровые серверы в Германии и Финляндии на базе AMD Ryzen&nbsp;9&nbsp;3900.<br />
+            Минимальный пинг · Автоматическое развёртывание за 60 секунд.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up stagger-4">
@@ -489,7 +497,7 @@ export default function Index() {
                 </p>
                 <button onClick={() => window.open(`https://t.me/${TELEGRAM_USERNAME}`, "_blank")}
                   className="neon-btn mt-6 px-6 py-3 rounded text-sm font-semibold flex items-center gap-2 w-full justify-center relative overflow-hidden group">
-                  <span className="relative z-10 flex items-center gap-2"><Icon name="Send" size={16} />Написать в Telegram</span>
+                  <span className="relative z-10 flex items-center gap-2"><Icon name="Send" size={16} />@AstrixHosting в Telegram</span>
                   <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
                     style={{ background: "linear-gradient(90deg, transparent, rgba(0,255,255,0.15), transparent)" }} />
                 </button>
@@ -591,7 +599,7 @@ export default function Index() {
                 </button>
                 <button onClick={() => window.open(`https://t.me/${TELEGRAM_USERNAME}`, "_blank")}
                   className="neon-btn-purple px-8 py-4 rounded text-base font-semibold flex items-center justify-center gap-2 relative overflow-hidden group">
-                  <span className="relative z-10 flex items-center gap-2"><Icon name="Send" size={16} />TELEGRAM</span>
+                  <span className="relative z-10 flex items-center gap-2"><Icon name="Send" size={16} />@ASTRIXHOSTING</span>
                   <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700"
                     style={{ background: "linear-gradient(90deg, transparent, rgba(191,95,255,0.2), transparent)" }} />
                 </button>
