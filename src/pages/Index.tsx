@@ -270,9 +270,48 @@ export default function Index() {
   const [panelModal, setPanelModal] = useState(false);
   const [form, setForm] = useState({ name: "", tg: "", email: "", comment: "" });
   const [formSent, setFormSent] = useState(false);
+  const [promoModal, setPromoModal] = useState(false);
+  const [promoInput, setPromoInput] = useState("");
+  const [promoError, setPromoError] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [adminTab, setAdminTab] = useState<"forms" | "logs">("forms");
+
+  const ADMIN_CODE = "adminHell123";
+
+  // Хранилище заявок (в реальности было бы на бэке, тут localStorage)
+  const [submissions, setSubmissions] = useState<{ name: string; tg: string; email: string; comment: string; date: string }[]>(() => {
+    try { return JSON.parse(localStorage.getItem("astrix_forms") || "[]"); } catch { return []; }
+  });
+  const [logs] = useState([
+    { time: "14.05.2025 18:42", event: "Заявка от @darkstar99 — тариф PRO DE", type: "form" },
+    { time: "14.05.2025 17:31", event: "Открыта панель 2.26.80.222", type: "panel" },
+    { time: "14.05.2025 16:55", event: "Заявка от @nickfury — тариф ULTRA FI", type: "form" },
+    { time: "14.05.2025 15:10", event: "Промокод активирован — adminHell123", type: "promo" },
+    { time: "14.05.2025 12:03", event: "Посетитель открыл сайт", type: "visit" },
+    { time: "13.05.2025 22:17", event: "Заявка от @player2025 — тариф LITE DE", type: "form" },
+    { time: "13.05.2025 19:44", event: "Клик «Купить» — тариф GAME PRO FI", type: "buy" },
+    { time: "13.05.2025 11:30", event: "Посетитель открыл сайт", type: "visit" },
+  ]);
+
+  const handlePromoSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (promoInput.trim() === ADMIN_CODE) {
+      setIsAdmin(true);
+      setPromoModal(false);
+      setPromoInput("");
+      setPromoError(false);
+    } else {
+      setPromoError(true);
+      setTimeout(() => setPromoError(false), 2000);
+    }
+  };
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    const entry = { ...form, date: new Date().toLocaleString("ru-RU") };
+    const updated = [entry, ...submissions];
+    setSubmissions(updated);
+    localStorage.setItem("astrix_forms", JSON.stringify(updated));
     const msg = encodeURIComponent(
       `📋 Заявка на аккаунт в панели:\n👤 Имя: ${form.name}\n💬 Telegram: ${form.tg}\n📧 Email: ${form.email}\n📝 Комментарий: ${form.comment}`
     );
@@ -342,6 +381,14 @@ export default function Index() {
             className="neon-btn px-5 py-2 rounded text-sm font-semibold flex items-center gap-2">
             <Icon name="ClipboardList" size={14} />
             Заявка
+          </button>
+          <button onClick={() => isAdmin ? setIsAdmin(false) : setPromoModal(true)}
+            className="px-4 py-2 rounded text-sm font-semibold flex items-center gap-2 transition-all duration-300"
+            style={isAdmin
+              ? { background: "rgba(0,255,100,0.15)", border: "1px solid rgba(0,255,100,0.5)", color: "#00ff64" }
+              : { background: "rgba(255,200,0,0.08)", border: "1px solid rgba(255,200,0,0.3)", color: "rgba(255,200,0,0.8)" }}>
+            <Icon name={isAdmin ? "ShieldCheck" : "Tag"} size={14} />
+            {isAdmin ? "Админ" : "Промокод"}
           </button>
         </div>
 
@@ -764,6 +811,132 @@ export default function Index() {
                     className="neon-btn mt-5 px-6 py-2 rounded text-sm font-semibold">
                     Закрыть
                   </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* МОДАЛКА ПРОМОКОДА */}
+      {promoModal && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4"
+          style={{ background: "rgba(5,10,15,0.95)", backdropFilter: "blur(20px)" }}
+          onClick={(e) => { if (e.target === e.currentTarget) { setPromoModal(false); setPromoInput(""); setPromoError(false); } }}>
+          <div className="relative w-full max-w-sm rounded-2xl p-8"
+            style={{ background: "linear-gradient(135deg, rgba(7,14,22,0.99), rgba(5,10,15,1))", border: "1px solid rgba(255,200,0,0.3)", boxShadow: "0 0 60px rgba(255,200,0,0.1)" }}>
+            <button onClick={() => { setPromoModal(false); setPromoInput(""); setPromoError(false); }}
+              className="absolute top-4 right-4 text-gray-500 hover:text-yellow-400 transition-colors">
+              <Icon name="X" size={18} />
+            </button>
+            <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-5"
+              style={{ background: "rgba(255,200,0,0.1)", border: "1px solid rgba(255,200,0,0.3)" }}>
+              <Icon name="Tag" size={22} className="text-yellow-400" />
+            </div>
+            <h3 className="font-orbitron text-lg font-bold text-white mb-1">Промокод</h3>
+            <p className="font-ibm text-sm text-gray-500 mb-6">Введите промокод для активации</p>
+            <form onSubmit={handlePromoSubmit} className="space-y-4">
+              <input
+                autoFocus
+                value={promoInput}
+                onChange={e => { setPromoInput(e.target.value); setPromoError(false); }}
+                placeholder="Введите промокод..."
+                className="w-full px-4 py-3 rounded-lg font-ibm text-sm text-white placeholder-gray-600 outline-none transition-all duration-300"
+                style={{ background: "rgba(255,200,0,0.04)", border: promoError ? "1px solid rgba(255,80,80,0.7)" : "1px solid rgba(255,200,0,0.2)" }} />
+              {promoError && (
+                <p className="font-ibm text-xs text-red-400 flex items-center gap-1.5">
+                  <Icon name="AlertCircle" size={12} />
+                  Неверный промокод
+                </p>
+              )}
+              <button type="submit"
+                className="w-full py-3 rounded-lg font-orbitron text-sm font-semibold transition-all duration-300"
+                style={{ background: "rgba(255,200,0,0.15)", border: "1px solid rgba(255,200,0,0.4)", color: "#ffc800" }}>
+                Активировать
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ADMIN PANEL */}
+      {isAdmin && (
+        <div className="fixed bottom-6 right-6 z-[90] w-full max-w-xl">
+          <div className="rounded-2xl overflow-hidden shadow-2xl"
+            style={{ background: "rgba(5,10,15,0.97)", border: "1px solid rgba(0,255,100,0.4)", boxShadow: "0 0 60px rgba(0,255,100,0.1)" }}>
+            {/* Шапка */}
+            <div className="flex items-center justify-between px-5 py-3"
+              style={{ borderBottom: "1px solid rgba(0,255,100,0.15)", background: "rgba(0,255,100,0.05)" }}>
+              <div className="flex items-center gap-2">
+                <Icon name="ShieldCheck" size={16} className="text-green-400" />
+                <span className="font-orbitron text-xs font-bold tracking-widest text-green-400">ADMIN PANEL</span>
+                <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse ml-1" />
+              </div>
+              <div className="flex items-center gap-2">
+                <button onClick={() => setAdminTab("forms")}
+                  className="font-ibm text-xs px-3 py-1 rounded transition-all duration-200"
+                  style={adminTab === "forms" ? { background: "rgba(0,255,100,0.2)", color: "#00ff64", border: "1px solid rgba(0,255,100,0.4)" } : { color: "rgba(150,150,150,0.6)", border: "1px solid transparent" }}>
+                  Заявки ({submissions.length})
+                </button>
+                <button onClick={() => setAdminTab("logs")}
+                  className="font-ibm text-xs px-3 py-1 rounded transition-all duration-200"
+                  style={adminTab === "logs" ? { background: "rgba(0,255,100,0.2)", color: "#00ff64", border: "1px solid rgba(0,255,100,0.4)" } : { color: "rgba(150,150,150,0.6)", border: "1px solid transparent" }}>
+                  Логи
+                </button>
+                <button onClick={() => setIsAdmin(false)} className="text-gray-600 hover:text-red-400 transition-colors ml-2">
+                  <Icon name="X" size={16} />
+                </button>
+              </div>
+            </div>
+
+            {/* Контент */}
+            <div className="overflow-y-auto" style={{ maxHeight: "320px" }}>
+              {adminTab === "forms" ? (
+                submissions.length === 0 ? (
+                  <div className="text-center py-10">
+                    <Icon name="Inbox" size={28} className="text-gray-700 mx-auto mb-2" />
+                    <p className="font-ibm text-sm text-gray-600">Заявок пока нет</p>
+                  </div>
+                ) : (
+                  <div className="divide-y" style={{ borderColor: "rgba(0,255,100,0.08)" }}>
+                    {submissions.map((s, i) => (
+                      <div key={i} className="px-5 py-4">
+                        <div className="flex items-start justify-between mb-1.5">
+                          <div className="flex items-center gap-2">
+                            <Icon name="User" size={13} className="text-green-400 opacity-70" />
+                            <span className="font-ibm text-sm font-medium text-white">{s.name}</span>
+                            <span className="font-ibm text-xs text-cyan-400">{s.tg}</span>
+                          </div>
+                          <span className="font-ibm text-xs text-gray-600">{s.date}</span>
+                        </div>
+                        {s.email && <p className="font-ibm text-xs text-gray-500 mb-1">📧 {s.email}</p>}
+                        {s.comment && <p className="font-ibm text-xs text-gray-400 leading-relaxed">💬 {s.comment}</p>}
+                        <button onClick={() => window.open(`https://t.me/${s.tg.replace("@", "")}`, "_blank")}
+                          className="mt-2 font-ibm text-xs px-3 py-1 rounded flex items-center gap-1.5 transition-all duration-200 hover:opacity-90"
+                          style={{ background: "rgba(0,255,100,0.1)", color: "#00ff64", border: "1px solid rgba(0,255,100,0.3)" }}>
+                          <Icon name="Send" size={11} />
+                          Ответить в Telegram
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )
+              ) : (
+                <div className="divide-y" style={{ borderColor: "rgba(0,255,100,0.08)" }}>
+                  {logs.map((log, i) => {
+                    const colors: Record<string, string> = { form: "#00ff64", panel: "#bf5fff", promo: "#ffc800", visit: "#00bfff", buy: "#ff6040" };
+                    const icons: Record<string, string> = { form: "ClipboardList", panel: "LayoutDashboard", promo: "Tag", visit: "Eye", buy: "ShoppingCart" };
+                    return (
+                      <div key={i} className="flex items-center gap-3 px-5 py-3">
+                        <div className="w-6 h-6 rounded flex items-center justify-center flex-shrink-0"
+                          style={{ background: `${colors[log.type]}18` }}>
+                          <Icon name={icons[log.type]} size={11} fallback="Activity" style={{ color: colors[log.type] }} />
+                        </div>
+                        <span className="font-ibm text-sm text-gray-300 flex-1">{log.event}</span>
+                        <span className="font-ibm text-xs text-gray-600 flex-shrink-0">{log.time}</span>
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>
