@@ -256,6 +256,7 @@ function TypewriterText({ texts }: { texts: string[] }) {
 export default function Index() {
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [navOpen, setNavOpen] = useState(false);
+  const [pricingTab, setPricingTab] = useState("de");
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const heroRef = useRef<HTMLElement>(null);
 
@@ -420,14 +421,43 @@ export default function Index() {
       {/* PRICING */}
       <section id="pricing" className="relative py-24 px-6">
         <div className="max-w-7xl mx-auto">
-          <RevealSection className="text-center mb-16">
+          <RevealSection className="text-center mb-10">
             <span className="font-orbitron text-xs tracking-[0.3em] uppercase" style={{ color: "var(--neon-cyan)" }}>Тарифные планы</span>
             <h2 className="font-orbitron text-3xl md:text-5xl font-bold mt-3 text-white">ВЫБЕРИТЕ МОЩНОСТЬ</h2>
             <p className="font-ibm text-gray-400 mt-4 text-base">Все серверы на AMD Ryzen 9 3900 · NVMe SSD · Мгновенное развёртывание</p>
           </RevealSection>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {plans.map((plan, i) => <PlanCard key={plan.id} plan={plan} index={i} />)}
+          {/* Вкладки локаций */}
+          <RevealSection className="flex justify-center mb-10">
+            <div className="flex rounded-xl overflow-hidden p-1 gap-1"
+              style={{ background: "rgba(0,255,255,0.05)", border: "1px solid rgba(0,255,255,0.15)" }}>
+              {[
+                { key: "de", label: "🇩🇪 Германия" },
+                { key: "fi", label: "🇫🇮 Финляндия" },
+              ].map(({ key, label }) => (
+                <button
+                  key={key}
+                  onClick={() => setPricingTab(key)}
+                  className="px-6 py-2.5 rounded-lg font-orbitron text-sm font-semibold tracking-wider transition-all duration-300"
+                  style={pricingTab === key ? {
+                    background: "linear-gradient(135deg, rgba(0,255,255,0.2), rgba(0,128,255,0.15))",
+                    color: "var(--neon-cyan)",
+                    boxShadow: "0 0 20px rgba(0,255,255,0.2)",
+                    border: "1px solid rgba(0,255,255,0.4)",
+                  } : {
+                    color: "rgba(150,150,150,0.8)",
+                    border: "1px solid transparent",
+                  }}>
+                  {label}
+                </button>
+              ))}
+            </div>
+          </RevealSection>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {plans
+              .filter(p => pricingTab === "de" ? p.location.includes("Германия") : p.location.includes("Финляндия"))
+              .map((plan, i) => <PlanCard key={plan.id} plan={plan} index={i} />)}
           </div>
         </div>
       </section>
