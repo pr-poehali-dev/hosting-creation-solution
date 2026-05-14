@@ -4,14 +4,23 @@ import Icon from "@/components/ui/icon";
 const TELEGRAM_USERNAME = "AstrixHosting";
 
 const plans = [
-  { id: "game-lite", name: "GAME LITE", location: "🇩🇪 Германия", price: "89", currency: "₽/мес", cpu: "2 vCPU", ram: "4 GB", disk: "30 GB NVMe", bandwidth: "1 Гбит/с", slots: "до 10 слотов", popular: false, color: "cyan", tag: "🎮 Игровой" },
-  { id: "game-start", name: "GAME START", location: "🇩🇪 Германия", price: "149", currency: "₽/мес", cpu: "3 vCPU", ram: "6 GB", disk: "50 GB NVMe", bandwidth: "1 Гбит/с", slots: "до 20 слотов", popular: false, color: "cyan", tag: "🎮 Игровой" },
-  { id: "game-pro", name: "GAME PRO", location: "🇩🇪 Германия", price: "249", currency: "₽/мес", cpu: "4 vCPU", ram: "8 GB", disk: "80 GB NVMe", bandwidth: "1 Гбит/с", slots: "до 40 слотов", popular: true, color: "cyan", tag: "🎮 Игровой" },
-  { id: "game-ultra", name: "GAME ULTRA", location: "🇩🇪 Германия", price: "449", currency: "₽/мес", cpu: "6 vCPU", ram: "16 GB", disk: "150 GB NVMe", bandwidth: "10 Гбит/с", slots: "до 80 слотов", popular: false, color: "purple", tag: "🔥 Топ" },
-  { id: "game-fi-lite", name: "GAME FI LITE", location: "🇫🇮 Финляндия", price: "79", currency: "₽/мес", cpu: "2 vCPU", ram: "4 GB", disk: "30 GB NVMe", bandwidth: "1 Гбит/с", slots: "до 10 слотов", popular: false, color: "cyan", tag: "🎮 Игровой" },
-  { id: "game-fi-start", name: "GAME FI START", location: "🇫🇮 Финляндия", price: "129", currency: "₽/мес", cpu: "3 vCPU", ram: "6 GB", disk: "50 GB NVMe", bandwidth: "1 Гбит/с", slots: "до 20 слотов", popular: false, color: "cyan", tag: "🎮 Игровой" },
-  { id: "game-fi-pro", name: "GAME FI PRO", location: "🇫🇮 Финляндия", price: "219", currency: "₽/мес", cpu: "4 vCPU", ram: "8 GB", disk: "80 GB NVMe", bandwidth: "1 Гбит/с", slots: "до 40 слотов", popular: false, color: "cyan", tag: "🎮 Игровой" },
-  { id: "game-fi-ultra", name: "GAME FI ULTRA", location: "🇫🇮 Финляндия", price: "399", currency: "₽/мес", cpu: "6 vCPU", ram: "16 GB", disk: "150 GB NVMe", bandwidth: "10 Гбит/с", slots: "до 80 слотов", popular: false, color: "purple", tag: "🔥 Топ" },
+  // 🇩🇪 Германия — 8 тарифов
+  { id: "de-micro",  name: "MICRO",      location: "🇩🇪 Германия", price: "59",  currency: "₽/мес", cpu: "1 vCPU", ram: "2 GB",  disk: "20 GB NVMe",  bandwidth: "500 Мбит/с", slots: "до 5 слотов",  popular: false, color: "cyan",   tag: "🎮 Игровой" },
+  { id: "de-lite",   name: "LITE",       location: "🇩🇪 Германия", price: "89",  currency: "₽/мес", cpu: "2 vCPU", ram: "4 GB",  disk: "30 GB NVMe",  bandwidth: "1 Гбит/с",   slots: "до 10 слотов", popular: false, color: "cyan",   tag: "🎮 Игровой" },
+  { id: "de-start",  name: "START",      location: "🇩🇪 Германия", price: "139", currency: "₽/мес", cpu: "2 vCPU", ram: "6 GB",  disk: "50 GB NVMe",  bandwidth: "1 Гбит/с",   slots: "до 20 слотов", popular: false, color: "cyan",   tag: "🎮 Игровой" },
+  { id: "de-plus",   name: "PLUS",       location: "🇩🇪 Германия", price: "199", currency: "₽/мес", cpu: "3 vCPU", ram: "8 GB",  disk: "70 GB NVMe",  bandwidth: "1 Гбит/с",   slots: "до 30 слотов", popular: false, color: "cyan",   tag: "🎮 Игровой" },
+  { id: "de-pro",    name: "PRO",        location: "🇩🇪 Германия", price: "269", currency: "₽/мес", cpu: "4 vCPU", ram: "8 GB",  disk: "100 GB NVMe", bandwidth: "1 Гбит/с",   slots: "до 50 слотов", popular: true,  color: "cyan",   tag: "🎮 Игровой" },
+  { id: "de-pro2",   name: "PRO MAX",    location: "🇩🇪 Германия", price: "349", currency: "₽/мес", cpu: "4 vCPU", ram: "12 GB", disk: "120 GB NVMe", bandwidth: "5 Гбит/с",   slots: "до 64 слотов", popular: false, color: "cyan",   tag: "⚡ Продвинутый" },
+  { id: "de-ultra",  name: "ULTRA",      location: "🇩🇪 Германия", price: "449", currency: "₽/мес", cpu: "6 vCPU", ram: "16 GB", disk: "150 GB NVMe", bandwidth: "10 Гбит/с",  slots: "до 80 слотов", popular: false, color: "purple", tag: "🔥 Топ" },
+  { id: "de-max",    name: "ULTRA MAX",  location: "🇩🇪 Германия", price: "599", currency: "₽/мес", cpu: "8 vCPU", ram: "32 GB", disk: "250 GB NVMe", bandwidth: "10 Гбит/с",  slots: "до 128 слотов",popular: false, color: "purple", tag: "🔥 Топ" },
+  // 🇫🇮 Финляндия — 7 тарифов
+  { id: "fi-lite",   name: "LITE",       location: "🇫🇮 Финляндия", price: "75",  currency: "₽/мес", cpu: "2 vCPU", ram: "4 GB",  disk: "30 GB NVMe",  bandwidth: "1 Гбит/с",   slots: "до 10 слотов", popular: false, color: "cyan",   tag: "🎮 Игровой" },
+  { id: "fi-start",  name: "START",      location: "🇫🇮 Финляндия", price: "119", currency: "₽/мес", cpu: "2 vCPU", ram: "6 GB",  disk: "50 GB NVMe",  bandwidth: "1 Гбит/с",   slots: "до 20 слотов", popular: false, color: "cyan",   tag: "🎮 Игровой" },
+  { id: "fi-plus",   name: "PLUS",       location: "🇫🇮 Финляндия", price: "179", currency: "₽/мес", cpu: "3 vCPU", ram: "8 GB",  disk: "70 GB NVMe",  bandwidth: "1 Гбит/с",   slots: "до 30 слотов", popular: false, color: "cyan",   tag: "🎮 Игровой" },
+  { id: "fi-pro",    name: "PRO",        location: "🇫🇮 Финляндия", price: "239", currency: "₽/мес", cpu: "4 vCPU", ram: "8 GB",  disk: "100 GB NVMe", bandwidth: "1 Гбит/с",   slots: "до 50 слотов", popular: true,  color: "cyan",   tag: "🎮 Игровой" },
+  { id: "fi-pro2",   name: "PRO MAX",    location: "🇫🇮 Финляндия", price: "319", currency: "₽/мес", cpu: "4 vCPU", ram: "12 GB", disk: "120 GB NVMe", bandwidth: "5 Гбит/с",   slots: "до 64 слотов", popular: false, color: "cyan",   tag: "⚡ Продвинутый" },
+  { id: "fi-ultra",  name: "ULTRA",      location: "🇫🇮 Финляндия", price: "399", currency: "₽/мес", cpu: "6 vCPU", ram: "16 GB", disk: "150 GB NVMe", bandwidth: "10 Гбит/с",  slots: "до 80 слотов", popular: false, color: "purple", tag: "🔥 Топ" },
+  { id: "fi-max",    name: "ULTRA MAX",  location: "🇫🇮 Финляндия", price: "539", currency: "₽/мес", cpu: "8 vCPU", ram: "32 GB", disk: "250 GB NVMe", bandwidth: "10 Гбит/с",  slots: "до 128 слотов",popular: false, color: "purple", tag: "🔥 Топ" },
 ];
 
 const features = [
@@ -454,7 +463,7 @@ export default function Index() {
             </div>
           </RevealSection>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {plans
               .filter(p => pricingTab === "de" ? p.location.includes("Германия") : p.location.includes("Финляндия"))
               .map((plan, i) => <PlanCard key={plan.id} plan={plan} index={i} />)}
